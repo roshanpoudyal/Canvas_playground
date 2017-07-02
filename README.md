@@ -1,2 +1,2 @@
 # Canvas_playground
-Fun with HTML Canvas
+Fun with HTML technology
