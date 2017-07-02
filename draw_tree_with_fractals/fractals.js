@@ -11,9 +11,7 @@ $(function() {
     var treeTrunklength = 120;
     var treeTrunkAngle = 0;
     var treeTrunkWidth = 10;
-    var treeLeftBranchInclination = -15; // to draw left branch with this angle from parent branch
-    var treeRightBranchInclination = 15; // to draw right branch with this angle from parent branch
-
+    //var branchInclination = -10; // to draw branch with this angle from parent branch
   	// function to draw on canvas
     var drawfunction = function (startX, startY, len, treeTrunkAngle, branchWidth) {
     ctx.beginPath();
@@ -22,19 +20,35 @@ $(function() {
     ctx.translate(startX, startY);
     ctx.rotate(treeTrunkAngle * Math.PI/180);
     ctx.moveTo(0, 0);
-    ctx.lineTo(0, -len);
+    // ctx.lineTo(0, -len);
+    if(treeTrunkAngle > 0){
+      ctx.bezierCurveTo(10,-len/2,10,-len/2,0,-len);
+    } else{
+      ctx.bezierCurveTo(-10,-len/2,-10,-len/2,0,-len);
+    }
     ctx.lineCap = "round";
     ctx.lineWidth = branchWidth;
+    ctx.strokeStyle = "darkgreen";
+    ctx.fillstyle = "green";
+
+
+    if(len > 20){
+      ctx.strokeStyle = "brown";
+    }
+
     ctx.stroke();
 
     if(len < 10) {
+      ctx.beginPath();
+      ctx.arc(0,-len,10,0,Math.PI/2);
+      ctx.fill();
       ctx.restore();
       return;
     }
 
-    drawfunction(0, -len, len*0.8, treeLeftBranchInclination, branchWidth*0.8); //draw left side tree branches on parent branch
+    drawfunction(0, -len, len*0.8, treeTrunkAngle + 10, branchWidth*0.8); //draw left side tree branches on parent branch
                                                           //; multiplication with -ve 1 gives anticlockwise angle
-    drawfunction(0, -len, len*0.8, treeRightBranchInclination, branchWidth*0.8); //draw right side tree branches on parent branch ; it is +ve with clockwise angle
+    drawfunction(0, -len, len*0.8, treeTrunkAngle - 10, branchWidth*0.8); //draw right side tree branches on parent branch ; it is +ve with clockwise angle
 
     ctx.restore();
   }
@@ -55,8 +69,6 @@ $(function() {
       case "lengthvalue": treeTrunklength = $(this).val(); break;
       case "starttrunkangle": treeTrunkAngle = $(this).val(); break;
       case "starttrunkwidth": treeTrunkWidth = $(this).val(); break;
-      case "leftbranchangle": treeLeftBranchInclination = $(this).val(); break;
-      case "rightbranchangle": treeRightBranchInclination = $(this).val(); break;
       default: break;
     }
 
